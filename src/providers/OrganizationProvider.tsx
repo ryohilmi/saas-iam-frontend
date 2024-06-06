@@ -47,19 +47,14 @@ const OrganizationProvider: React.FC<Props> = ({ children }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
-          console.error(data.error);
-        } else {
-          console.log("orgs", data);
-          const newOrganizations: Organization[] = data.map((org: any) => ({
-            name: org.name,
-            organizationId: org.organization_id,
-          }));
-          setOrganizations(newOrganizations);
+        const newOrganizations: Organization[] = data.map((org: any) => ({
+          name: org.name,
+          organizationId: org.organization_id,
+        }));
+        setOrganizations(newOrganizations);
 
-          if (newOrganizations.length > 0) {
-            setSelectedOrganization(newOrganizations[0]);
-          }
+        if (newOrganizations.length > 0) {
+          setSelectedOrganization(newOrganizations[0]);
         }
       });
   }, []);

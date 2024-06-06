@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/providers/AuthProvider";
-import { parseJwt } from "@/utils/parseJwt";
+import { parseJwt } from "@/lib/parseJwt";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";

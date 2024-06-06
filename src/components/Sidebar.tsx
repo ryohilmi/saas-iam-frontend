@@ -8,6 +8,8 @@ import {
   Package,
   Package2,
   ShoppingCart,
+  Tags,
+  User,
   Users,
 } from "lucide-react";
 
@@ -43,8 +45,22 @@ const Sidebar = () => {
               href="#"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
-              <Users className="h-4 w-4" />
+              <User className="h-4 w-4" />
               Users
+            </Link>
+            <Link
+              href="#"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+            >
+              <Users className="h-4 w-4" />
+              Group
+            </Link>
+            <Link
+              href="#"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+            >
+              <Tags className="h-4 w-4" />
+              Roles
             </Link>
           </nav>
         </div>

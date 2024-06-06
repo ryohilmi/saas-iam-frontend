@@ -42,19 +42,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const organizations: { label: string; value: string }[] = [
-  //   {
-  //     label: "Universitas Airlangga",
-  //     value: "unair",
-  //   },
-  //   {
-  //     label: "Institut Teknologi Bandung",
-  //     value: "itb",
-  //   },
-];
-
-type Organization = (typeof organizations)[number];
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -66,36 +54,46 @@ export default function OrganizationSwitcher({
   className,
 }: OrganizationSwitcherProps) {
   const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedOrg, setSelectedOrg] = React.useState<Organization>();
+  const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
+
+  const { organizations, selectedOrganization, setSelectedOrganization } =
+    React.useContext(OrganizationContext);
+
+  const organizationOptions = organizations.map((org) => ({
+    value: org.organizationId,
+    label: org.name,
+  }));
 
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+    <Dialog open={showNewOrgDialog} onOpenChange={setShowNewOrgDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={cn("w-[500px] justify-between", className)}
+            className={cn("w-[300px] justify-between", className)}
           >
             <p className="mr-2">
-              {selectedOrg?.label || "Select organization"}
+              {selectedOrganization?.name || "Select organization"}
             </p>
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[500px] p-0">
+        <PopoverContent className="w-[300px] p-0">
           <Command>
             <CommandList>
               <CommandInput placeholder="Search organization..." />
               <CommandEmpty>No team found.</CommandEmpty>
               <CommandGroup>
-                {organizations?.map((team) => (
+                {organizationOptions?.map((org) => (
                   <CommandItem
-                    key={team.value}
+                    key={org.value}
                     onSelect={() => {
-                      setSelectedOrg(team);
+                      setSelectedOrganization({
+                        name: org.label,
+                        organizationId: org.value,
+                      });
                       setOpen(false);
                     }}
                     className="text-sm"
@@ -108,11 +106,11 @@ export default function OrganizationSwitcher({
                       />
                       <AvatarFallback>SC</AvatarFallback>
                     </Avatar> */}
-                    {team.label}
+                    {org.label}
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
-                        selectedOrg?.value === team.value
+                        selectedOrganization?.organizationId == org.value
                           ? "opacity-100"
                           : "opacity-0"
                       )}
@@ -128,7 +126,7 @@ export default function OrganizationSwitcher({
                   <CommandItem
                     onSelect={() => {
                       setOpen(false);
-                      setShowNewTeamDialog(true);
+                      setShowNewOrgDialog(true);
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
@@ -160,7 +158,7 @@ export default function OrganizationSwitcher({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
+          <Button variant="outline" onClick={() => setShowNewOrgDialog(false)}>
             Cancel
           </Button>
           <Button type="submit">Continue</Button>

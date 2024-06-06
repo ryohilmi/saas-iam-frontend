@@ -1,17 +1,28 @@
 "use client";
 
+import { parseJwt } from "@/lib/parseJwt";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
+
+type UserInfo = {
+  sub: string;
+  name: string;
+  email: string;
+  picture: string;
+};
 
 type AuthContextType = {
   token: string | null;
   login: () => void;
   logout: () => void;
+  userInfo: UserInfo | null;
 };
 
 export const AuthContext = createContext<AuthContextType>({
   token: null,
   login: () => {},
   logout: () => {},
+  userInfo: null,
 });
 
 type Props = {
@@ -19,6 +30,8 @@ type Props = {
 };
 const AuthProvider: React.FC<Props> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const pathname = usePathname();
 
   const login = () => {
     fetch(`${process.env.NEXT_PUBLIC_IAM_HOST}/login`, {
@@ -47,14 +60,22 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
+    if (pathname === "/callback") return;
+
     const token = localStorage.getItem("token");
+
     if (token) {
       setToken(token);
+
+      const { sub, name, email, picture } = parseJwt(token);
+      setUserInfo({ sub, name, email, picture });
+    } else {
+      login();
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, logout, token }}>
+    <AuthContext.Provider value={{ login, logout, token, userInfo }}>
       {children}
     </AuthContext.Provider>
   );

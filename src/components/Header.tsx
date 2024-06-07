@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
             className="rounded-full !outline-none"
           >
             <Avatar className="h-8 w-8">
-              <AvatarImage src={userInfo?.picture} alt="@shadcn" />
+              <AvatarImage src={userInfo?.picture} alt="profile" />
               <AvatarFallback>{userInfo?.name[0].toUpperCase()}</AvatarFallback>
             </Avatar>
           </Button>

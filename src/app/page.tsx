@@ -22,8 +22,12 @@ import { useForm } from "@tanstack/react-form";
 import type { FieldApi } from "@tanstack/react-form";
 import Spinner from "@/components/ui/spinner";
 import { Loader2 } from "lucide-react";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
 
 export default function Home() {
+  const { userInfo } = useContext(AuthContext);
+  const { organizations } = useContext(OrganizationContext);
+
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const form = useForm({
@@ -57,16 +61,32 @@ export default function Home() {
     },
   });
 
+  if (!userInfo) {
+    return (
+      <div className="flex flex-col min-h-[80vh] items-center justify-center gap-6">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (organizations.length > 0) {
+    return (
+      <div className="flex flex-col min-h-[80vh] items-center justify-center gap-6">
+        <p className="text-4xl font-medium">Hi, {userInfo.name}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-[80vh] items-center justify-center gap-6">
-      <Dialog open={showNewOrgDialog} onOpenChange={setShowNewOrgDialog}>
-        <p className="font-medium text-xl px-4 text-center">
-          It looks like you are not affiliated with any organization :/
-        </p>
-        <Button onClick={() => setShowNewOrgDialog(true)}>
-          Create organization
-        </Button>
+      <p className="font-medium text-xl px-4 text-center">
+        It looks like you are not affiliated with any organization :/
+      </p>
+      <Button onClick={() => setShowNewOrgDialog(true)}>
+        Create organization
+      </Button>
 
+      <Dialog open={showNewOrgDialog} onOpenChange={setShowNewOrgDialog}>
         <DialogContent>
           <form
             onSubmit={(e) => {

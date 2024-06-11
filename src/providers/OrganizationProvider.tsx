@@ -16,12 +16,14 @@ type OrganizationContextType = {
   setSelectedOrganization: React.Dispatch<
     React.SetStateAction<Organization | null>
   >;
+  updateOrganizations: () => Promise<void>;
 };
 
 export const OrganizationContext = createContext<OrganizationContextType>({
   organizations: [],
   selectedOrganization: null,
   setSelectedOrganization: () => {},
+  updateOrganizations: async () => {},
 });
 
 type Props = {
@@ -34,6 +36,10 @@ const OrganizationProvider: React.FC<Props> = ({ children }) => {
     useState<Organization | null>(null);
 
   React.useEffect(() => {
+    fetchOrganizations();
+  }, []);
+
+  const fetchOrganizations = async () => {
     if (!localStorage.getItem("token")) {
       return;
     }
@@ -57,11 +63,16 @@ const OrganizationProvider: React.FC<Props> = ({ children }) => {
           setSelectedOrganization(newOrganizations[0]);
         }
       });
-  }, []);
+  };
 
   return (
     <OrganizationContext.Provider
-      value={{ organizations, selectedOrganization, setSelectedOrganization }}
+      value={{
+        organizations,
+        selectedOrganization,
+        setSelectedOrganization,
+        updateOrganizations: fetchOrganizations,
+      }}
     >
       {children}
     </OrganizationContext.Provider>

@@ -23,6 +23,7 @@ import type { FieldApi } from "@tanstack/react-form";
 import Spinner from "@/components/ui/spinner";
 import { Loader2 } from "lucide-react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import CreateOrganizationDialog from "@/components/CreateOrganizationDialog";
 
 export default function Home() {
   const { userInfo } = useContext(AuthContext);
@@ -86,107 +87,10 @@ export default function Home() {
         Create organization
       </Button>
 
-      <Dialog open={showNewOrgDialog} onOpenChange={setShowNewOrgDialog}>
-        <DialogContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-          >
-            <DialogHeader>
-              <DialogTitle>Create Organization</DialogTitle>
-              <DialogDescription>
-                Create organization to manage your team and projects.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div>
-              <div className="space-y-4 py-2 pb-4">
-                <form.Field
-                  name="name"
-                  validators={{
-                    onChange: ({ value }) =>
-                      !value ? "Organization name is required" : undefined,
-                  }}
-                  children={(field) => {
-                    return (
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Organization name</Label>
-                        <Input
-                          id={field.name}
-                          name={field.name}
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder="My Org."
-                        />
-                        <FieldInfo field={field} />
-                      </div>
-                    );
-                  }}
-                />
-
-                <form.Field
-                  name="identifier"
-                  validators={{
-                    onChange: ({ value }) =>
-                      !value
-                        ? "Organization identifier is required"
-                        : !/^[a-z_]+$/.test(value)
-                        ? "Organization identifier must be in snake_case"
-                        : undefined,
-                  }}
-                  children={(field) => {
-                    return (
-                      <div className="space-y-2">
-                        <Label htmlFor={field.name}>
-                          Organization identifier
-                        </Label>
-                        <Input
-                          id={field.name}
-                          name={field.name}
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder="my_org"
-                        />
-                        <FieldInfo field={field} />
-                      </div>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setShowNewOrgDialog(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Continue
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-
-function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
-  return (
-    <div className="text-xs space-y-2 h-2">
-      {field.state.meta.touchedErrors ? (
-        <em className="text-red-700">{field.state.meta.touchedErrors}</em>
-      ) : null}
+      <CreateOrganizationDialog
+        showDialog={showNewOrgDialog}
+        setShowDialog={setShowNewOrgDialog}
+      />
     </div>
   );
 }

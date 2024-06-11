@@ -43,6 +43,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import CreateDialog from "@/app/users/components/CreateDialog";
+import CreateOrganizationDialog from "./CreateOrganizationDialog";
+import { useEffect } from "react";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -56,16 +59,27 @@ export default function OrganizationSwitcher({
   const [open, setOpen] = React.useState(false);
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
 
-  const { organizations, selectedOrganization, setSelectedOrganization } =
-    React.useContext(OrganizationContext);
+  const {
+    organizations,
+    selectedOrganization,
+    setSelectedOrganization,
+    updateOrganizations,
+  } = React.useContext(OrganizationContext);
 
   const organizationOptions = organizations.map((org) => ({
     value: org.organizationId,
     label: org.name,
   }));
 
+  useEffect(() => {
+    updateOrganizations();
+  }, [open]);
+
   return (
-    <Dialog open={showNewOrgDialog} onOpenChange={setShowNewOrgDialog}>
+    <CreateOrganizationDialog
+      showDialog={showNewOrgDialog}
+      setShowDialog={setShowNewOrgDialog}
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -99,13 +113,13 @@ export default function OrganizationSwitcher({
                     className="text-sm"
                   >
                     {/* <Avatar className="mr-2 h-5 w-5">
-                      <AvatarImage
-                        src={`https://avatar.vercel.sh/${team.value}.png`}
-                        alt={team.label}
-                        className="grayscale"
-                      />
-                      <AvatarFallback>SC</AvatarFallback>
-                    </Avatar> */}
+                    <AvatarImage
+                      src={`https://avatar.vercel.sh/${team.value}.png`}
+                      alt={team.label}
+                      className="grayscale"
+                    />
+                    <AvatarFallback>SC</AvatarFallback>
+                  </Avatar> */}
                     {org.label}
                     <CheckIcon
                       className={cn(
@@ -138,32 +152,6 @@ export default function OrganizationSwitcher({
           </Command>
         </PopoverContent>
       </Popover>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Organization</DialogTitle>
-          <DialogDescription>
-            Create organization to manage your team and projects.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Organization name</Label>
-              <Input id="name" placeholder="My Org." />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Organization id</Label>
-              <Input id="name" placeholder="my_org" />
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewOrgDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Continue</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    </CreateOrganizationDialog>
   );
 }

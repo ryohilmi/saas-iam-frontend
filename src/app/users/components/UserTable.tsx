@@ -31,6 +31,7 @@ type User = {
   picture: string;
   email: string;
   level: string;
+  joined_at: string;
 };
 
 const UserTable = () => {
@@ -50,7 +51,6 @@ const UserTable = () => {
           </TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Level</TableHead>
-          <TableHead className="hidden md:table-cell">Latest Login</TableHead>
           <TableHead className="hidden md:table-cell">Joined at</TableHead>
           <TableHead>
             <span className="sr-only">Actions</span>
@@ -76,10 +76,7 @@ const UserTable = () => {
               <Badge variant="outline">{user.level}</Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
-              07-06-2024 10:42 AM
-            </TableCell>
-            <TableCell className="hidden md:table-cell">
-              06-06-2024 01:21 AM
+              {new Date(user.joined_at).toLocaleDateString()}
             </TableCell>
             <TableCell>
               <DropdownMenu>

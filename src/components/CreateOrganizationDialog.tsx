@@ -23,6 +23,7 @@ import Spinner from "@/components/ui/spinner";
 import { Loader2 } from "lucide-react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 interface Props {
   showDialog: boolean;
@@ -36,6 +37,7 @@ const CreateOrganizationDialog: React.FC<Props> = ({
   children,
 }) => {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const form = useForm({
     defaultValues: {
@@ -59,6 +61,7 @@ const CreateOrganizationDialog: React.FC<Props> = ({
             console.error(data.error);
           } else {
             console.log(data);
+            mutate(`/organization`);
           }
         })
         .finally(() => {

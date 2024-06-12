@@ -74,6 +74,7 @@ const Navbar: React.FC = () => {
           </nav>
         </SheetContent>
       </Sheet>
+
       <OrganizationSwitcher />
       <div className="w-full flex-1"></div>
       <DropdownMenu>

@@ -25,6 +25,7 @@ import useSWR from "swr";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import fetcher from "@/lib/fetcher";
 import { User } from "@/types/user";
+import { parseName } from "@/lib/parseName";
 
 type Props = {
   users: User[] | undefined;
@@ -49,12 +50,14 @@ const UserTable: React.FC<Props> = ({ users }) => {
 
       <TableBody>
         {users?.map((user) => (
-          <TableRow key={user.user_org_id}>
+          <TableRow key={user.user_id}>
             <TableCell className="hidden sm:table-cell">
-              <div className="rounded-full overflow-hidden">
-                <Avatar className="h-6 w-6">
+              <div className="rounded-full !outline-none overflow-hidden">
+                <Avatar className="w-full">
                   <AvatarImage src={user.picture} alt="User Image" />
-                  <AvatarFallback>R</AvatarFallback>
+                  <AvatarFallback className="bg-muted w-full">
+                    {parseName(user.name)}
+                  </AvatarFallback>
                 </Avatar>
               </div>
             </TableCell>

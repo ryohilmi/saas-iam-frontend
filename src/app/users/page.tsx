@@ -1,96 +1,51 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import {
-  File,
-  Home,
-  LineChart,
-  ListFilter,
-  MoreHorizontal,
-  Package,
-  Package2,
-  PanelLeft,
-  PlusCircle,
-  Search,
-  Settings,
-  ShoppingCart,
-  Users2,
-} from "lucide-react";
+import { PlusCircle, Search } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import UserTable from "./components/UserTable";
 import React, { useContext } from "react";
 import CreateDialog from "./components/CreateDialog";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
-import useSWR from "swr";
-import fetcher from "@/lib/fetcher";
-import { User } from "@/types/user";
 import useUsers from "@/hooks/useUsers";
+import { useDebounceValue } from "usehooks-ts";
 
 const Users = () => {
   const { selectedOrganization } = useContext(OrganizationContext);
   const organizationId = selectedOrganization?.organizationId || "";
 
-  const { users, mutate } = useUsers({ organizationId });
-
   const [showDialog, setShowDialog] = React.useState(false);
+  const [search, setSearch] = useDebounceValue("", 50);
+
+  const { users, mutate } = useUsers({ organizationId });
+  const filteredUsers = users?.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <main className="flex flex-col w-full items-start gap-4 p-4 pt-6 sm:px-6 sm:py-0 md:gap-8">
+    <main className="flex flex-col w-full items-start gap-4 md:gap-8">
       <div className="flex items-center w-full justify-between">
         <div className="relative flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search..."
+            // value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
           />
         </div>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex whitespace-nowrap min-w-[110px] items-center gap-2">
           <Button
             size="sm"
             className="h-8 gap-1"
@@ -110,7 +65,7 @@ const Users = () => {
           <CardDescription>Manage users in your organization</CardDescription>
         </CardHeader>
         <CardContent>
-          <UserTable users={users} />
+          <UserTable users={filteredUsers} />
         </CardContent>
         {/* <CardFooter>
           <div className="text-xs text-muted-foreground">

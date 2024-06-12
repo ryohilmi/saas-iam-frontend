@@ -46,6 +46,7 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import CreateDialog from "@/app/users/components/CreateDialog";
 import CreateOrganizationDialog from "./CreateOrganizationDialog";
 import { useEffect } from "react";
+import { useSWRConfig } from "swr";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -59,12 +60,8 @@ export default function OrganizationSwitcher({
   const [open, setOpen] = React.useState(false);
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
 
-  const {
-    organizations,
-    selectedOrganization,
-    setSelectedOrganization,
-    updateOrganizations,
-  } = React.useContext(OrganizationContext);
+  const { organizations, selectedOrganization, setSelectedOrganization } =
+    React.useContext(OrganizationContext);
 
   const organizationOptions = organizations.map((org) => ({
     value: org.organizationId,

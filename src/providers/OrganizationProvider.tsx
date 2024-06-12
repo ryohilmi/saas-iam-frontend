@@ -1,9 +1,11 @@
 "use client";
 
+import fetcher from "@/lib/fetcher";
 import { parseJwt } from "@/lib/parseJwt";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { createContext, useEffect, useState } from "react";
+import useSWR from "swr";
 
 type Organization = {
   organizationId: string;
@@ -16,14 +18,12 @@ type OrganizationContextType = {
   setSelectedOrganization: React.Dispatch<
     React.SetStateAction<Organization | null>
   >;
-  updateOrganizations: () => Promise<void>;
 };
 
 export const OrganizationContext = createContext<OrganizationContextType>({
   organizations: [],
   selectedOrganization: null,
   setSelectedOrganization: () => {},
-  updateOrganizations: async () => {},
 });
 
 type Props = {
@@ -31,39 +31,23 @@ type Props = {
 };
 
 const OrganizationProvider: React.FC<Props> = ({ children }) => {
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const { data, mutate } = useSWR("/organization", fetcher);
+  const organizations =
+    data?.map((org: any) => {
+      return {
+        organizationId: org.organization_id,
+        name: org.name,
+      };
+    }) || [];
+
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
 
-  React.useEffect(() => {
-    fetchOrganizations();
-  }, []);
-
-  const fetchOrganizations = async () => {
-    if (!localStorage.getItem("token")) {
-      return;
+  useEffect(() => {
+    if (organizations.length > 0) {
+      setSelectedOrganization(organizations[0]);
     }
-
-    fetch(`${process.env.NEXT_PUBLIC_IAM_HOST}/organization`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")} `,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const newOrganizations: Organization[] = data.map((org: any) => ({
-          name: org.name,
-          organizationId: org.organization_id,
-        }));
-        setOrganizations(newOrganizations);
-
-        if (newOrganizations.length > 0) {
-          setSelectedOrganization(newOrganizations[0]);
-        }
-      });
-  };
+  }, [data]);
 
   return (
     <OrganizationContext.Provider
@@ -71,7 +55,6 @@ const OrganizationProvider: React.FC<Props> = ({ children }) => {
         organizations,
         selectedOrganization,
         setSelectedOrganization,
-        updateOrganizations: fetchOrganizations,
       }}
     >
       {children}

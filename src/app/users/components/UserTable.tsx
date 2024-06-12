@@ -38,7 +38,7 @@ const UserTable = () => {
   const { selectedOrganization } = useContext(OrganizationContext);
 
   const { data: users } = useSWR<User[]>(
-    `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/user?organization_id=${selectedOrganization?.organizationId}`,
+    `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/users?organization_id=${selectedOrganization?.organizationId}`,
     fetcher
   );
 

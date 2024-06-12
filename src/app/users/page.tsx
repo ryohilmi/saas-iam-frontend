@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -61,8 +63,12 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import UserTable from "./components/UserTable";
+import React from "react";
+import CreateDialog from "./components/CreateDialog";
 
 const Users = () => {
+  const [showDialog, setShowDialog] = React.useState(false);
+
   return (
     <main className="flex flex-col w-full items-start gap-4 p-4 pt-6 sm:px-6 sm:py-0 md:gap-8">
       <div className="flex items-center w-full justify-between">
@@ -75,7 +81,11 @@ const Users = () => {
           />
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="h-8 gap-1">
+          <Button
+            size="sm"
+            className="h-8 gap-1"
+            onClick={() => setShowDialog(true)}
+          >
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Add User
@@ -98,6 +108,8 @@ const Users = () => {
           </div>
         </CardFooter>
       </Card>
+
+      <CreateDialog showDialog={showDialog} setShowDialog={setShowDialog} />
     </main>
   );
 };

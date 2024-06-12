@@ -24,7 +24,7 @@ import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import fetcher from "@/lib/fetcher";
-import { User } from "../page";
+import { User } from "@/types/user";
 
 type Props = {
   users: User[] | undefined;

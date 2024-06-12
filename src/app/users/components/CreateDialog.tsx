@@ -16,7 +16,7 @@ import { validateEmail, validatePassword } from "@/lib/validators";
 import { useContext } from "react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import { KeyedMutator } from "swr";
-import type { User } from "../page";
+import type { User } from "@/types/user";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 

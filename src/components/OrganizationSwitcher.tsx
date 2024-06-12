@@ -71,10 +71,6 @@ export default function OrganizationSwitcher({
     label: org.name,
   }));
 
-  useEffect(() => {
-    updateOrganizations();
-  }, [open]);
-
   return (
     <CreateOrganizationDialog
       showDialog={showNewOrgDialog}

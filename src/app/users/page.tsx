@@ -68,24 +68,14 @@ import CreateDialog from "./components/CreateDialog";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
-
-export type User = {
-  user_org_id: string;
-  user_id: string;
-  name: string;
-  picture: string;
-  email: string;
-  level: string;
-  joined_at: string;
-};
+import { User } from "@/types/user";
+import useUsers from "@/hooks/useUsers";
 
 const Users = () => {
   const { selectedOrganization } = useContext(OrganizationContext);
+  const organizationId = selectedOrganization?.organizationId || "";
 
-  const { data: users, mutate } = useSWR<User[]>(
-    `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/users?organization_id=${selectedOrganization?.organizationId}`,
-    fetcher
-  );
+  const { users, mutate } = useUsers({ organizationId });
 
   const [showDialog, setShowDialog] = React.useState(false);
 

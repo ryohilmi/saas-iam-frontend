@@ -20,28 +20,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
+import fetcher from "@/lib/fetcher";
+import { User } from "../page";
 
-type User = {
-  user_org_id: string;
-  user_id: string;
-  name: string;
-  picture: string;
-  email: string;
-  level: string;
-  joined_at: string;
+type Props = {
+  users: User[] | undefined;
 };
 
-const UserTable = () => {
-  const { selectedOrganization } = useContext(OrganizationContext);
-
-  const { data: users } = useSWR<User[]>(
-    `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/users?organization_id=${selectedOrganization?.organizationId}`,
-    fetcher
-  );
-
+const UserTable: React.FC<Props> = ({ users }) => {
   return (
     <Table>
       <TableHeader>
@@ -57,6 +46,7 @@ const UserTable = () => {
           </TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         {users?.map((user) => (
           <TableRow key={user.user_org_id}>
@@ -79,19 +69,25 @@ const UserTable = () => {
               {new Date(user.joined_at).toLocaleDateString()}
             </TableCell>
             <TableCell>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button aria-haspopup="true" size="icon" variant="ghost">
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">Toggle menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>.
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {user.level !== "owner" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    {user.level == "member" ? (
+                      <DropdownMenuItem>Make Manager</DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem>Make Member</DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem>Remove</DropdownMenuItem>.
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </TableCell>
           </TableRow>
         ))}
@@ -101,17 +97,3 @@ const UserTable = () => {
 };
 
 export default UserTable;
-
-const fetcher = (url: string) =>
-  fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-    .then((res) => {
-      return res.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });

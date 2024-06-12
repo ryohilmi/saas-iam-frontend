@@ -63,10 +63,30 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import UserTable from "./components/UserTable";
-import React from "react";
+import React, { useContext } from "react";
 import CreateDialog from "./components/CreateDialog";
+import { OrganizationContext } from "@/providers/OrganizationProvider";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+
+export type User = {
+  user_org_id: string;
+  user_id: string;
+  name: string;
+  picture: string;
+  email: string;
+  level: string;
+  joined_at: string;
+};
 
 const Users = () => {
+  const { selectedOrganization } = useContext(OrganizationContext);
+
+  const { data: users, mutate } = useSWR<User[]>(
+    `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/users?organization_id=${selectedOrganization?.organizationId}`,
+    fetcher
+  );
+
   const [showDialog, setShowDialog] = React.useState(false);
 
   return (
@@ -100,16 +120,20 @@ const Users = () => {
           <CardDescription>Manage users in your organization</CardDescription>
         </CardHeader>
         <CardContent>
-          <UserTable />
+          <UserTable users={users} />
         </CardContent>
-        <CardFooter className="absolute bottom-0">
+        {/* <CardFooter>
           <div className="text-xs text-muted-foreground">
             Showing <strong>1-10</strong> of <strong>32</strong> users
           </div>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
 
-      <CreateDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+      <CreateDialog
+        showDialog={showDialog}
+        setShowDialog={setShowDialog}
+        mutate={mutate}
+      />
     </main>
   );
 };

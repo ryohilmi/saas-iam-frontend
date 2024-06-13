@@ -24,43 +24,13 @@ import Spinner from "@/components/ui/spinner";
 import { Loader2 } from "lucide-react";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import CreateOrganizationDialog from "@/components/CreateOrganizationDialog";
+import { useSWRConfig } from "swr";
 
 export default function Home() {
   const { userInfo } = useContext(AuthContext);
   const { organizations } = useContext(OrganizationContext);
 
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      identifier: "",
-    },
-    onSubmit: async ({ value }) => {
-      setIsSubmitting(true);
-
-      fetch(`${process.env.NEXT_PUBLIC_IAM_HOST}/organization`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")} `,
-        },
-        body: JSON.stringify(value),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            console.error(data.error);
-          } else {
-            console.log(data);
-          }
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-          setShowNewOrgDialog(false);
-        });
-    },
-  });
 
   if (!userInfo) {
     return (
@@ -74,6 +44,7 @@ export default function Home() {
     return (
       <div className="flex flex-col min-h-[80vh] items-center justify-center gap-6">
         <p className="text-4xl font-medium">Hi, {userInfo.name}</p>
+        <button>TES</button>
       </div>
     );
   }

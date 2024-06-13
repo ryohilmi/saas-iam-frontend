@@ -41,6 +41,7 @@ const Sidebar = () => {
               <Home className="h-4 w-4" />
               Dashboard
             </Link>
+
             <Link
               href="/users"
               className={cn(
@@ -51,19 +52,21 @@ const Sidebar = () => {
               <User className="h-4 w-4" />
               Users
             </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Users className="h-4 w-4" />
-              Group
-            </Link>
+
             <Link
               href="#"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <Tags className="h-4 w-4" />
               Roles
+            </Link>
+
+            <Link
+              href="#"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+            >
+              <Users className="h-4 w-4" />
+              Group
             </Link>
           </nav>
         </div>

@@ -182,15 +182,38 @@ const CreateUserTab: React.FC<FormTabProps> = ({
   setShowDialog,
   submitCallback,
 }) => {
+  const { selectedOrganization } = useContext(OrganizationContext);
+
   const createForm = useForm({
     defaultValues: {
       email: "",
+      name: "",
       password: "",
       repeatPassword: "",
     },
     onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log(value);
+      console.log(value, selectedOrganization);
+
+      if (!selectedOrganization) return;
+
+      console.log(value, selectedOrganization);
+
+      await fetch(
+        `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/create-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")} `,
+          },
+          body: JSON.stringify({
+            email: value.email,
+            name: value.name,
+            password: value.password,
+            organization_id: selectedOrganization.organizationId,
+          }),
+        }
+      );
 
       submitCallback && submitCallback();
     },
@@ -198,9 +221,15 @@ const CreateUserTab: React.FC<FormTabProps> = ({
 
   return (
     <TabsContent value="create">
-      <div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          createForm.handleSubmit();
+        }}
+      >
         <div className="space-y-4 py-2 pb-4">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <createForm.Field
               name="email"
               validators={{
@@ -235,7 +264,41 @@ const CreateUserTab: React.FC<FormTabProps> = ({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
+            <createForm.Field
+              name="name"
+              validators={{
+                onChange: ({ value }) => {
+                  if (!value) {
+                    return "Name is required";
+                  }
+
+                  if (value.length < 3) {
+                    return "Name must be at least 3 characters";
+                  }
+                },
+              }}
+              children={(field) => {
+                // Avoid hasty abstractions. Render props are great!
+                return (
+                  <>
+                    <Label>Name</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="User One"
+                    />
+                    <FieldInfo field={field} />
+                  </>
+                );
+              }}
+            />
+          </div>
+
+          <div className="space-y-1">
             <createForm.Field
               name="password"
               validators={{
@@ -262,7 +325,7 @@ const CreateUserTab: React.FC<FormTabProps> = ({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <createForm.Field
               name="repeatPassword"
               validators={{
@@ -293,24 +356,24 @@ const CreateUserTab: React.FC<FormTabProps> = ({
             />
           </div>
         </div>
-      </div>
 
-      <DialogFooter>
-        <Button variant="outline" onClick={() => setShowDialog(false)}>
-          Cancel
-        </Button>
-        <createForm.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit}>
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Create
-            </Button>
-          )}
-        />
-      </DialogFooter>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setShowDialog(false)}>
+            Cancel
+          </Button>
+          <createForm.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit}>
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Create
+              </Button>
+            )}
+          />
+        </DialogFooter>
+      </form>
     </TabsContent>
   );
 };

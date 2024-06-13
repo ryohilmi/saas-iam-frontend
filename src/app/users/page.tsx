@@ -17,8 +17,10 @@ import CreateDialog from "./components/CreateDialog";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import useUsers from "@/hooks/useUsers";
 import { useDebounceValue } from "usehooks-ts";
+import { AuthContext } from "@/providers/AuthProvider";
 
 const Users = () => {
+  const { userInfo } = useContext(AuthContext);
   const { selectedOrganization } = useContext(OrganizationContext);
   const organizationId = selectedOrganization?.organizationId || "";
 
@@ -28,9 +30,45 @@ const Users = () => {
   const { users, mutate } = useUsers({ organizationId });
   const filteredUsers = users?.filter(
     (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
+      (user.name.toLowerCase().includes(search.toLowerCase()) ||
+        user.email.toLowerCase().includes(search.toLowerCase())) &&
+      user.user_id !== userInfo?.sub
   );
+
+  if (!selectedOrganization) {
+    return (
+      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h3 className="text-2xl font-bold tracking-tight">No Organization</h3>
+          <p className="text-sm text-muted-foreground">
+            You have not selected any organization yet.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredUsers.length === 0 || !users) {
+    return (
+      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h3 className="text-2xl font-bold tracking-tight">No User</h3>
+          <p className="text-sm text-muted-foreground">
+            You have not created any user yet.
+          </p>
+          <Button onClick={() => setShowDialog(true)} className="mt-4">
+            Create User
+          </Button>
+
+          <CreateDialog
+            showDialog={showDialog}
+            setShowDialog={setShowDialog}
+            mutate={mutate}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="flex flex-col w-full items-start gap-4 md:gap-8">

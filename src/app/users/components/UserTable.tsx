@@ -55,8 +55,10 @@ const UserTable: React.FC<Props> = ({ users }) => {
               <div className="rounded-full !outline-none overflow-hidden">
                 <Avatar className="w-full">
                   <AvatarImage src={user.picture} alt="User Image" />
-                  <AvatarFallback className="bg-muted w-full">
-                    {parseName(user.name)}
+                  <AvatarFallback>
+                    <div className="bg-muted aspect-square flex items-center justify-center text-lg">
+                      {parseName(user.name)}
+                    </div>
                   </AvatarFallback>
                 </Avatar>
               </div>

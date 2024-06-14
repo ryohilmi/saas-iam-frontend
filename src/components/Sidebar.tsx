@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   Bell,
+  Box,
   Home,
   LineChart,
   Package,
@@ -54,8 +55,22 @@ const Sidebar = () => {
             </Link>
 
             <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              href="/tenants"
+              className={cn(
+                pathname !== "/tenants" && "text-muted-foreground",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+              )}
+            >
+              <Box className="h-4 w-4" />
+              Tenants
+            </Link>
+
+            <Link
+              href="/roles"
+              className={cn(
+                pathname !== "/roles" && "text-muted-foreground",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+              )}
             >
               <Tags className="h-4 w-4" />
               Roles

@@ -27,15 +27,13 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import CreateOrganizationDialog from "./CreateOrganizationDialog";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
-import { parseAsJson, useQueryState } from "nuqs";
+import { parseAsJson, parseAsString, useQueryState } from "nuqs";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
-interface TenantSwitcherProps extends PopoverTriggerProps {
-  setTenant?: (tenant: Tenant) => void;
-}
+interface TenantSwitcherProps extends PopoverTriggerProps {}
 
 export type Tenant = {
   tenant_id: string;
@@ -51,9 +49,11 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
       `/tenants?organization_id=${selectedOrganization?.organizationId}`,
     fetcher
   );
-  const [selectedTenant, setSelectedTenant] = useQueryState(
-    "tenant",
-    parseAsJson<Tenant>()
+
+  const [tenantId, setTenantId] = useQueryState("tenant_id", parseAsString);
+  const [tenantName, setTenantName] = useQueryState(
+    "tenant_name",
+    parseAsString
   );
 
   const tenantOptions = tenants?.map((tenant) => ({
@@ -70,7 +70,7 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
           aria-expanded={open}
           className={cn("w-[300px] justify-between", className)}
         >
-          <p className="mr-2">{selectedTenant?.name || "Select tenant"}</p>
+          <p className="mr-2">{tenantName || "Select tenant"}</p>
           <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -85,10 +85,8 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
                   <CommandItem
                     key={tenant.value}
                     onSelect={() => {
-                      setSelectedTenant({
-                        name: tenant.label,
-                        tenant_id: tenant.value,
-                      });
+                      setTenantId(tenant.value);
+                      setTenantName(tenant.label);
                       setOpen(false);
                     }}
                     className="text-sm"
@@ -105,9 +103,7 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
-                        selectedTenant?.tenant_id === tenant.value
-                          ? "opacity-100"
-                          : "opacity-0"
+                        tenantId === tenant.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                   </CommandItem>

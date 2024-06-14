@@ -16,7 +16,7 @@ import { useDebounceValue } from "usehooks-ts";
 import TenantSwitcher, { Tenant } from "@/components/TenantSwitcher";
 import RoleTable from "./components/RoleTable";
 import { AuthContext } from "@/providers/AuthProvider";
-import { parseAsJson, useQueryState } from "nuqs";
+import { parseAsJson, parseAsString, useQueryState } from "nuqs";
 import useRoles from "@/hooks/useRoles";
 
 const Users = () => {
@@ -24,13 +24,14 @@ const Users = () => {
   const { selectedOrganization } = useContext(OrganizationContext);
   const organizationId = selectedOrganization?.organizationId || "";
 
-  const [selectedTenant, setSelectedTenant] = useQueryState(
-    "tenant",
-    parseAsJson<Tenant>()
+  const [tenantId, setTenantId] = useQueryState("tenant_id", parseAsString);
+  const [tenantName, setTenantName] = useQueryState(
+    "tenant_name",
+    parseAsString
   );
   const { roles, isLoading } = useRoles({
     organizationId,
-    tenantId: selectedTenant?.tenant_id,
+    tenantId: tenantId || undefined,
   });
 
   const [search, setSearch] = useDebounceValue("", 50);
@@ -39,7 +40,7 @@ const Users = () => {
     role.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (!selectedTenant) {
+  if (!tenantId) {
     return (
       <main className="flex flex-col w-full items-start gap-4 md:gap-8 min-h-[80vh]">
         <div className="flex items-center w-full justify-between">
@@ -75,7 +76,7 @@ const Users = () => {
     <main className="flex flex-col w-full items-start gap-4 md:gap-8">
       <div className="flex items-center w-full justify-between">
         <div className="flex whitespace-nowrap min-w-[110px] items-center gap-2">
-          <TenantSwitcher setTenant={(tenant) => setSelectedTenant(tenant)} />
+          <TenantSwitcher />
         </div>
 
         <div className="relative flex-1 md:grow-0 ml-auto">
@@ -95,7 +96,7 @@ const Users = () => {
           <CardTitle>Roles</CardTitle>
           <CardDescription>
             View Roles In{" "}
-            <span className="font-semibold inline">{selectedTenant.name}</span>{" "}
+            <span className="font-semibold inline">{tenantName}</span>{" "}
             Application
           </CardDescription>
         </CardHeader>

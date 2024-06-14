@@ -97,7 +97,7 @@ const Users = () => {
         </div>
       </div>
 
-      <Card className="min-h-[60vh] w-full relative">
+      <Card className="w-full relative">
         <CardHeader>
           <CardTitle>Users</CardTitle>
           <CardDescription>Manage users in your organization</CardDescription>

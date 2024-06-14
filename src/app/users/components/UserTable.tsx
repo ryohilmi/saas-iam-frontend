@@ -112,7 +112,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
                       ) : (
                         <DropdownMenuItem>Make Member</DropdownMenuItem>
                       )}
-                      <DropdownMenuItem>Remove</DropdownMenuItem>.
+                      <DropdownMenuItem>Remove</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}

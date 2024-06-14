@@ -42,6 +42,9 @@ const RoleTable: React.FC<Props> = ({ roles, isLoading }) => {
           <TableHead>Name</TableHead>
           <TableHead className="hidden md:table-cell">Description</TableHead>
           <TableHead>Permissions</TableHead>
+          <TableHead>
+            <span className="sr-only">Actions</span>
+          </TableHead>
         </TableRow>
       </TableHeader>
       {isLoading ? (
@@ -81,6 +84,20 @@ const RoleTable: React.FC<Props> = ({ roles, isLoading }) => {
                     {permission}
                   </Badge>
                 ))}
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>User list</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}

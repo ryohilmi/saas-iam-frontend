@@ -27,13 +27,15 @@ import fetcher from "@/lib/fetcher";
 import { User } from "@/types/user";
 import { parseName } from "@/lib/parseName";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DialogTypes } from "../page";
 
 type Props = {
   users: User[] | undefined;
   isLoading?: boolean;
+  setActionDialog: (type: DialogTypes, user: User) => void;
 };
 
-const UserTable: React.FC<Props> = ({ users, isLoading }) => {
+const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
   return (
     <Table>
       <TableHeader>
@@ -107,6 +109,11 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => setActionDialog("assign_role", user)}
+                      >
+                        Assign Role
+                      </DropdownMenuItem>
                       {user.level == "member" ? (
                         <DropdownMenuItem>Make Manager</DropdownMenuItem>
                       ) : (

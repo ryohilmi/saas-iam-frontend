@@ -18,6 +18,8 @@ import { OrganizationContext } from "@/providers/OrganizationProvider";
 import useUsers from "@/hooks/useUsers";
 import { useDebounceValue } from "usehooks-ts";
 import { AuthContext } from "@/providers/AuthProvider";
+import AssignRoleDialog from "./components/AssignRoleDialog";
+import { User } from "@/types/user";
 
 const Users = () => {
   const { userInfo } = useContext(AuthContext);
@@ -25,6 +27,10 @@ const Users = () => {
   const organizationId = selectedOrganization?.organizationId || "";
 
   const [showDialog, setShowDialog] = React.useState(false);
+  const [actionDialog, setActionDialog] = React.useState<{
+    open: boolean;
+    type: DialogTypes;
+  }>({ open: false, type: "assign_role" });
   const [search, setSearch] = useDebounceValue("", 50);
 
   const { users, mutate, isLoading } = useUsers({ organizationId });
@@ -34,6 +40,8 @@ const Users = () => {
         user.email.toLowerCase().includes(search.toLowerCase())) &&
       user.user_id !== userInfo?.sub
   );
+
+  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
 
   if (!selectedOrganization) {
     return (
@@ -103,13 +111,23 @@ const Users = () => {
           <CardDescription>Manage users in your organization</CardDescription>
         </CardHeader>
         <CardContent>
-          <UserTable users={filteredUsers} isLoading={isLoading} />
+          <AssignRoleDialog
+            showDialog={actionDialog.open && actionDialog.type == "assign_role"}
+            setShowDialog={(open) =>
+              setActionDialog({ type: "assign_role", open })
+            }
+            user={selectedUser}
+          >
+            <UserTable
+              users={filteredUsers}
+              isLoading={isLoading}
+              setActionDialog={(type, user) => {
+                setActionDialog({ type, open: true });
+                setSelectedUser(user);
+              }}
+            />
+          </AssignRoleDialog>
         </CardContent>
-        {/* <CardFooter>
-          <div className="text-xs text-muted-foreground">
-            Showing <strong>1-10</strong> of <strong>32</strong> users
-          </div>
-        </CardFooter> */}
       </Card>
 
       <CreateDialog
@@ -122,3 +140,9 @@ const Users = () => {
 };
 
 export default Users;
+
+export type DialogTypes =
+  | "make_manager"
+  | "make_member"
+  | "remove"
+  | "assign_role";

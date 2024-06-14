@@ -6,8 +6,8 @@ const useRoles = ({
   tenantId,
   organizationId,
 }: {
-  organizationId: string | undefined;
-  tenantId: string | undefined;
+  organizationId: string | undefined | null;
+  tenantId: string | undefined | null;
 }) => {
   const url =
     tenantId && organizationId

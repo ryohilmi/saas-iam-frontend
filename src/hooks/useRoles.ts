@@ -16,7 +16,7 @@ const useRoles = ({
 
   const { data: roles, isLoading, mutate } = useSWR<Role[]>(url, fetcher);
 
-  return { roles: roles || [], mutate };
+  return { roles: roles || [], mutate, isLoading };
 };
 
 export default useRoles;

@@ -27,7 +27,7 @@ const Users = () => {
   const [showDialog, setShowDialog] = React.useState(false);
   const [search, setSearch] = useDebounceValue("", 50);
 
-  const { users, mutate } = useUsers({ organizationId });
+  const { users, mutate, isLoading } = useUsers({ organizationId });
   const filteredUsers = users?.filter(
     (user) =>
       (user.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -48,7 +48,7 @@ const Users = () => {
     );
   }
 
-  if (filteredUsers.length === 0 || !users) {
+  if ((filteredUsers.length === 0 || !users) && !isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
         <div className="flex flex-col items-center gap-1 text-center">
@@ -103,7 +103,7 @@ const Users = () => {
           <CardDescription>Manage users in your organization</CardDescription>
         </CardHeader>
         <CardContent>
-          <UserTable users={filteredUsers} />
+          <UserTable users={filteredUsers} isLoading={isLoading} />
         </CardContent>
         {/* <CardFooter>
           <div className="text-xs text-muted-foreground">

@@ -9,12 +9,13 @@ const useUsers = ({
 }) => {
   const url = `/organization/users?organization_id=${organizationId}`;
 
-  const { data: users, mutate } = useSWR<User[]>(
-    organizationId ? url : null,
-    fetcher
-  );
+  const {
+    data: users,
+    mutate,
+    isLoading,
+  } = useSWR<User[]>(organizationId ? url : null, fetcher);
 
-  return { users: users || [], mutate };
+  return { users: users || [], mutate, isLoading };
 };
 
 export default useUsers;

@@ -28,12 +28,11 @@ const Users = () => {
     "tenant",
     parseAsJson<Tenant>()
   );
-  const { roles } = useRoles({
+  const { roles, isLoading } = useRoles({
     organizationId,
     tenantId: selectedTenant?.tenant_id,
   });
 
-  const [showDialog, setShowDialog] = React.useState(false);
   const [search, setSearch] = useDebounceValue("", 50);
 
   const filteredRoles = roles?.filter((role) =>
@@ -101,7 +100,7 @@ const Users = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <RoleTable roles={filteredRoles} />
+          <RoleTable roles={filteredRoles} isLoading={isLoading} />
         </CardContent>
       </Card>
     </main>

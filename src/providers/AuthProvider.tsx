@@ -62,17 +62,17 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     if (pathname === "/callback") return;
 
-    const token = localStorage.getItem("token");
+    const storageToken = localStorage.getItem("token");
 
-    if (token) {
+    if (storageToken && !token) {
       setToken(token);
 
-      const { sub, name, email, picture } = parseJwt(token);
+      const { sub, name, email, picture } = parseJwt(storageToken);
       setUserInfo({ sub, name, email, picture });
     } else {
       login();
     }
-  }, []);
+  }, [pathname, token]);
 
   return (
     <AuthContext.Provider value={{ login, logout, token, userInfo }}>

@@ -8,6 +8,7 @@ import {
   LineChart,
   Package,
   Package2,
+  ReceiptText,
   ShoppingCart,
   Tags,
   User,
@@ -34,6 +35,8 @@ const Sidebar = () => {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-md font-medium lg:px-4">
+            <p className="mt-4 mb-2 ml-1 text-muted-foreground">Menu</p>
+
             <Link
               href="/"
               className={cn(
@@ -57,17 +60,6 @@ const Sidebar = () => {
             </Link>
 
             <Link
-              href="/tenants"
-              className={cn(
-                pathname !== "/tenants" && "text-muted-foreground",
-                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-              )}
-            >
-              <Box className="h-4 w-4" />
-              Tenants
-            </Link>
-
-            <Link
               href="/roles"
               className={cn(
                 !pathname.startsWith("/roles") && "text-muted-foreground",
@@ -84,6 +76,32 @@ const Sidebar = () => {
             >
               <Users className="h-4 w-4" />
               Group
+            </Link>
+
+            <p className="mt-8 mb-2 ml-1 text-muted-foreground">
+              External Apps
+            </p>
+
+            <Link
+              href="#"
+              className={cn(
+                pathname !== "/tenants" && "text-muted-foreground",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+              )}
+            >
+              <Box className="h-4 w-4" />
+              Tenant Management
+            </Link>
+
+            <Link
+              href="#"
+              className={cn(
+                pathname !== "/tenants" && "text-muted-foreground",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+              )}
+            >
+              <ReceiptText className="h-4 w-4" />
+              Billing
             </Link>
           </nav>
         </div>

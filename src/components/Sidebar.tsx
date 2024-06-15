@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
 const Sidebar = () => {
   const pathname = usePathname();
 
+  console.log(pathname);
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -68,7 +70,7 @@ const Sidebar = () => {
             <Link
               href="/roles"
               className={cn(
-                pathname !== "/roles" && "text-muted-foreground",
+                !pathname.startsWith("/roles") && "text-muted-foreground",
                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
               )}
             >

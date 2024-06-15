@@ -28,6 +28,8 @@ import { User } from "@/types/user";
 import { parseName } from "@/lib/parseName";
 import { Role } from "@/types/role";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { parseAsString, useQueryState } from "nuqs";
 
 type Props = {
   roles: Role[] | undefined;
@@ -35,6 +37,8 @@ type Props = {
 };
 
 const RoleTable: React.FC<Props> = ({ roles, isLoading }) => {
+  const [tenantId] = useQueryState("tenant_id", parseAsString);
+
   return (
     <Table>
       <TableHeader>
@@ -95,7 +99,11 @@ const RoleTable: React.FC<Props> = ({ roles, isLoading }) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>User list</DropdownMenuItem>
+                    <Link
+                      href={`/roles/users?tenant_id=${tenantId}&role_id=${role.id}&role=${role.name}`}
+                    >
+                      <DropdownMenuItem>User list</DropdownMenuItem>
+                    </Link>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

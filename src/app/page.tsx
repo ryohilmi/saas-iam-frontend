@@ -19,10 +19,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useRecentUsers from "@/hooks/useRecentUsers";
 import { parseName } from "@/lib/parseName";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import useStatitstics from "@/hooks/useStatistics";
 
 export default function Home() {
   const { userInfo } = useContext(AuthContext);
-  const { organizations } = useContext(OrganizationContext);
+  const { selectedOrganization, organizations } =
+    useContext(OrganizationContext);
+  const organizationId = selectedOrganization?.organizationId || "";
+  const { statistics } = useStatitstics({ organizationId });
 
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
 
@@ -66,7 +70,9 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">15</div>
+              <div className="text-2xl font-bold">
+                {statistics?.member_count}
+              </div>
             </CardContent>
           </Card>
 
@@ -90,7 +96,9 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">
+                {statistics?.manager_count}
+              </div>
             </CardContent>
           </Card>
 
@@ -113,7 +121,9 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1</div>
+              <div className="text-2xl font-bold">
+                {statistics?.tenant_count}
+              </div>
             </CardContent>
           </Card>
         </div>

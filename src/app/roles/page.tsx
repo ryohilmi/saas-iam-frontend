@@ -46,6 +46,8 @@ const Users = () => {
 
   const [search, setSearch] = useDebounceValue("", 50);
 
+  console.log("lore", roles);
+
   const filteredRoles = roles?.filter((role) =>
     role.name.toLowerCase().includes(search.toLowerCase())
   );

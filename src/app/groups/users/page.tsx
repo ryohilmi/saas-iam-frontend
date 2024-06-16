@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import useRoleUsers from "@/hooks/useRoleUsers";
+import useGroupUsers from "@/hooks/useGroupUsers";
 
 const Users = () => {
   const router = useRouter();
@@ -38,15 +39,16 @@ const Users = () => {
   const organizationId = selectedOrganization?.organizationId || "";
 
   const [tenantId] = useQueryState("tenant_id", parseAsString);
-  const [roleId] = useQueryState("role_id", parseAsString);
-  const [role] = useQueryState("role", parseAsString);
+  const [tenantName] = useQueryState("tenant_name", parseAsString);
+  const [groupId] = useQueryState("group_id", parseAsString);
+  const [group] = useQueryState("group", parseAsString);
 
   const [search, setSearch] = useDebounceValue("", 50);
 
-  const { users, mutate, isLoading } = useRoleUsers({
+  const { users, mutate, isLoading } = useGroupUsers({
     organizationId,
     tenantId,
-    roleId,
+    groupId,
   });
   const filteredUsers = users?.filter(
     (user) =>
@@ -82,9 +84,13 @@ const Users = () => {
                 </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
-              <Link href={`/roles?tenant_id=${tenantId}`}>
-                <BreadcrumbLink>Roles</BreadcrumbLink>
+              <Link
+                href={`/groups?tenant_id=${tenantId}&tenant_name=${tenantName}`}
+              >
+                <BreadcrumbLink>Group</BreadcrumbLink>
               </Link>
+              <BreadcrumbSeparator />
+              <BreadcrumbLink className="cursor-none">{group}</BreadcrumbLink>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage>Users</BreadcrumbPage>
@@ -124,11 +130,13 @@ const Users = () => {
               </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <Link href={`/roles?tenant_id=${tenantId}`}>
-              <BreadcrumbLink>Roles</BreadcrumbLink>
+            <Link
+              href={`/groups?tenant_id=${tenantId}&tenant_name=${tenantName}`}
+            >
+              <BreadcrumbLink>Group</BreadcrumbLink>
             </Link>
             <BreadcrumbSeparator />
-            <BreadcrumbLink className="cursor-none">{role}</BreadcrumbLink>
+            <BreadcrumbLink className="cursor-none">{group}</BreadcrumbLink>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>Users</BreadcrumbPage>
@@ -152,7 +160,7 @@ const Users = () => {
         <CardHeader>
           <CardTitle>Users</CardTitle>
           <CardDescription>
-            Users with <b>{role}</b> role
+            Users with <b>{group}</b> role
           </CardDescription>
         </CardHeader>
         <CardContent>

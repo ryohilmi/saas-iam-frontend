@@ -43,7 +43,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
   const organizationId = selectedOrganization?.organizationId || "";
 
   const [tenantId] = useQueryState("tenant_id", parseAsString);
-  const [roleId] = useQueryState("role_id", parseAsString);
+  const [groupId] = useQueryState("group_id", parseAsString);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [showDialog, setShowDialog] = useState(false);
@@ -52,18 +52,18 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
   const functionOne = async (userOrgId: string) => {
     console.log("functionOne");
 
-    if (!organizationId || !roleId || !tenantId || !userOrgId) return;
+    if (!organizationId || !groupId || !tenantId || !userOrgId) return;
 
     setIsSubmitting(true);
 
     const payload = {
       organization_id: organizationId,
       user_org_id: userOrgId,
-      role_id: roleId,
+      group_id: groupId,
       tenant_id: tenantId,
     };
 
-    await fetch(`${process.env.NEXT_PUBLIC_IAM_HOST}/user/role`, {
+    await fetch(`${process.env.NEXT_PUBLIC_IAM_HOST}/user/group`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -78,9 +78,9 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
           toast.error(data.error);
         } else {
           console.log(data);
-          toast.success("Role removed successfully");
+          toast.success("Group removed successfully");
           mutate(
-            `/role/users?tenant_id=${tenantId}&role_id=${roleId}&organization_id=${organizationId}`
+            `/group/users?tenant_id=${tenantId}&group_id=${groupId}&organization_id=${organizationId}`
           );
         }
       })
@@ -167,7 +167,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
                             setSelectedUser(user);
                           }}
                         >
-                          Remove Role
+                          Remove Group
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -182,7 +182,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
       <ConfirmationDialog
         showDialog={showDialog}
         setShowDialog={setShowDialog}
-        description={`Are you sure you want to remove the role from ${selectedUser?.name}?`}
+        description={`Are you sure you want to remove the group from ${selectedUser?.name}?`}
         action={() => {
           functionOne(selectedUser?.user_org_id || "");
         }}

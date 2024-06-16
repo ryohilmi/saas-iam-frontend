@@ -14,9 +14,10 @@ const useGroups = ({
       ? `/tenant/groups?tenant_id=${tenantId}&organization_id=${organizationId}`
       : null;
 
-  const { data: groups, isLoading, mutate } = useSWR<Group[]>(url, fetcher);
+  const { data, isLoading, mutate } = useSWR<Group[]>(url, fetcher);
+  const groups = Array.isArray(data) ? data : [];
 
-  return { groups: groups || [], mutate, isLoading };
+  return { groups, mutate, isLoading };
 };
 
 export default useGroups;

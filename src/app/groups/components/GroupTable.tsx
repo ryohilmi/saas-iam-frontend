@@ -39,6 +39,7 @@ type Props = {
 
 const GroupTable: React.FC<Props> = ({ groups, isLoading }) => {
   const [tenantId] = useQueryState("tenant_id", parseAsString);
+  const [tenantName] = useQueryState("tenant_name", parseAsString);
 
   return (
     <Table>
@@ -100,11 +101,11 @@ const GroupTable: React.FC<Props> = ({ groups, isLoading }) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    {/* <Link
-                      href={`/roles/users?tenant_id=${tenantId}&role_id=${role.id}&role=${role.name}`}
+                    <Link
+                      href={`/groups/users?tenant_id=${tenantId}&tenant_name=${tenantName}&group_id=${group.id}&group=${group.name}`}
                     >
                       <DropdownMenuItem>User list</DropdownMenuItem>
-                    </Link> */}
+                    </Link>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

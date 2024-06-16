@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/popover";
 import { OrganizationContext } from "@/providers/OrganizationProvider";
 import CreateOrganizationDialog from "./CreateOrganizationDialog";
+import { usePathname, useRouter } from "next/navigation";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -35,6 +36,8 @@ interface OrganizationSwitcherProps extends PopoverTriggerProps {}
 export default function OrganizationSwitcher({
   className,
 }: OrganizationSwitcherProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
   const [showNewOrgDialog, setShowNewOrgDialog] = React.useState(false);
 
@@ -80,6 +83,7 @@ export default function OrganizationSwitcher({
                         organizationId: org.value,
                       });
                       setOpen(false);
+                      router.replace(pathname);
                     }}
                     className="text-sm"
                   >

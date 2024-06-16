@@ -1,5 +1,6 @@
 import fetcher from "@/lib/fetcher";
 import { Role } from "@/types/role";
+import { useEffect } from "react";
 import useSWR from "swr";
 
 const useRoles = ({
@@ -14,9 +15,10 @@ const useRoles = ({
       ? `/tenant/roles?tenant_id=${tenantId}&organization_id=${organizationId}`
       : null;
 
-  const { data: roles, isLoading, mutate } = useSWR<Role[]>(url, fetcher);
+  const { data, isLoading, mutate } = useSWR<Role[]>(url, fetcher);
+  const roles = Array.isArray(data) ? data : [];
 
-  return { roles: roles || [], mutate, isLoading };
+  return { roles, mutate, isLoading };
 };
 
 export default useRoles;

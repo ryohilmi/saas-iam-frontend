@@ -30,7 +30,7 @@ export default function RootLayout({
               <div className="flex flex-col">
                 <Header />
 
-                <div className="flex flex-1 flex-col gap-2 p-2 lg:gap-4 lg:p-6 max-h-[90vh] overflow-y-scroll">
+                <div className="flex flex-1 flex-col gap-2 p-2 lg:gap-4 lg:p-6 pb-0 max-h-[90vh] overflow-y-scroll">
                   {children}
                 </div>
               </div>

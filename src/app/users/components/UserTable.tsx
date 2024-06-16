@@ -28,6 +28,7 @@ import { User } from "@/types/user";
 import { parseName } from "@/lib/parseName";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DialogTypes } from "../page";
+import { AuthContext } from "@/providers/AuthProvider";
 
 type Props = {
   users: User[] | undefined;
@@ -36,6 +37,8 @@ type Props = {
 };
 
 const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
+  const { membershipLevel } = useContext(OrganizationContext);
+
   return (
     <Table>
       <TableHeader>
@@ -114,11 +117,14 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                       >
                         Assign Role
                       </DropdownMenuItem>
-                      {user.level == "member" ? (
-                        <DropdownMenuItem>Make Manager</DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem>Make Member</DropdownMenuItem>
-                      )}
+                      {membershipLevel === "owner" &&
+                        user.level == "member" && (
+                          <DropdownMenuItem>Make Manager</DropdownMenuItem>
+                        )}
+                      {membershipLevel === "owner" &&
+                        user.level == "manager" && (
+                          <DropdownMenuItem>Make Member</DropdownMenuItem>
+                        )}
                       <DropdownMenuItem>Remove</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

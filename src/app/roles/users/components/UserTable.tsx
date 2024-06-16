@@ -178,6 +178,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
           </TableBody>
         )}
       </Table>
+
       <ConfirmationDialog
         showDialog={showDialog}
         setShowDialog={setShowDialog}

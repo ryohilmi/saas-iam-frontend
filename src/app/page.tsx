@@ -172,9 +172,17 @@ export default function Home() {
 }
 
 const LoginActivity = () => {
-  const max = 50;
+  const max = 15;
 
   const data = [
+    {
+      name: "10/06",
+      total: Math.floor(Math.random() * max),
+    },
+    {
+      name: "11/06",
+      total: Math.floor(Math.random() * max),
+    },
     {
       name: "12/06",
       total: Math.floor(Math.random() * max),
@@ -190,18 +198,6 @@ const LoginActivity = () => {
     {
       name: "15/06",
       total: Math.floor(Math.random() * max),
-    },
-    {
-      name: "16/06",
-      total: Math.floor(Math.random() * max),
-    },
-    {
-      name: "17/06",
-      total: Math.floor(Math.random() * max),
-    },
-    {
-      name: "18/06",
-      total: Math.floor(Math.random() * 100),
     },
   ];
 

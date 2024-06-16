@@ -61,6 +61,10 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
     label: tenant.name,
   }));
 
+  const selectedTenant = tenantOptions?.find(
+    (tenant) => tenant.value === tenantId
+  );
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -70,7 +74,7 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
           aria-expanded={open}
           className={cn("w-[300px] justify-between", className)}
         >
-          <p className="mr-2">{tenantName || "Select tenant"}</p>
+          <p className="mr-2">{selectedTenant?.label || "Select tenant"}</p>
           <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -89,6 +93,7 @@ export default function TenantSwitcher({ className }: TenantSwitcherProps) {
                       setTenantName(tenant.label);
                       setOpen(false);
                     }}
+                    value={tenant.value}
                     className="text-sm"
                   >
                     {/* <Avatar className="mr-2 h-5 w-5">

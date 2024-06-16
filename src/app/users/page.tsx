@@ -19,6 +19,7 @@ import useUsers from "@/hooks/useUsers";
 import { useDebounceValue } from "usehooks-ts";
 import { AuthContext } from "@/providers/AuthProvider";
 import AssignRoleDialog from "./components/AssignRoleDialog";
+import AssignGroupDialog from "./components/AssignGroupDialog";
 import { User } from "@/types/user";
 import {
   Breadcrumb,
@@ -191,6 +192,13 @@ const Users = () => {
         setShowDialog={(open) => setActionDialog({ type: "assign_role", open })}
         user={selectedUser}
       />
+      <AssignGroupDialog
+        showDialog={actionDialog.open && actionDialog.type == "assign_group"}
+        setShowDialog={(open) =>
+          setActionDialog({ type: "assign_group", open })
+        }
+        user={selectedUser}
+      />
       <CreateDialog
         showDialog={showDialog}
         setShowDialog={setShowDialog}
@@ -206,4 +214,5 @@ export type DialogTypes =
   | "make_manager"
   | "make_member"
   | "remove"
-  | "assign_role";
+  | "assign_role"
+  | "assign_group";

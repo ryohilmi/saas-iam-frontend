@@ -208,6 +208,12 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                         >
                           Assign Role
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setActionDialog("assign_group", user)}
+                        >
+                          Assign Group
+                        </DropdownMenuItem>
+
                         {membershipLevel === "owner" &&
                           user.level == "member" && (
                             <DropdownMenuItem

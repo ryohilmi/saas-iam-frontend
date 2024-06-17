@@ -6,4 +6,5 @@ export type User = {
   email: string;
   level: string;
   joined_at: string;
+  identities: string[];
 };

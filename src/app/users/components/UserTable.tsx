@@ -32,6 +32,7 @@ import { AuthContext } from "@/providers/AuthProvider";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import Link from "next/link";
 
 type Props = {
   users: User[] | undefined;
@@ -179,7 +180,11 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <p className="text-lg">{user.name}</p>
+                  <Link href={`/users/detail?user_org_id=${user.user_org_id}`}>
+                    <p className="text-lg text-blue-950 hover:font-medium">
+                      {user.name}
+                    </p>
+                  </Link>
                   <p className="font-light">{user.email}</p>
                 </TableCell>
                 <TableCell>

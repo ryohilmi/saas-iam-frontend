@@ -49,6 +49,7 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [showDialog, setShowDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [dialogType, setDialogType] = useState<"promote" | "demote">("promote");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -123,6 +124,45 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
       .finally(() => {
         setIsSubmitting(false);
         setShowDialog(false);
+      });
+  };
+
+  const removeUser = async (userOrgId: string) => {
+    if (!organizationId || !userOrgId) return;
+
+    setIsSubmitting(true);
+
+    const payload = {
+      organization_id: organizationId,
+      user_org_id: userOrgId,
+    };
+
+    await fetch(
+      `${process.env.NEXT_PUBLIC_IAM_HOST}/organization/remove-user`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")} `,
+        },
+        body: JSON.stringify(payload),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.error(data);
+          toast.error(data.error);
+        } else {
+          console.log(data);
+          toast.success("User removed");
+          mutate(`/organization/users?organization_id=${organizationId}`);
+          mutate(`/organization/statistics?organization_id=${organizationId}`);
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+        setShowDeleteDialog(false);
       });
   };
 
@@ -243,7 +283,14 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                               Make Member
                             </DropdownMenuItem>
                           )}
-                        <DropdownMenuItem>Remove</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setShowDeleteDialog(true);
+                            setSelectedUser(user);
+                          }}
+                        >
+                          Remove
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}
@@ -265,6 +312,14 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
             ? functionOne(selectedUser?.user_org_id || "")
             : demoteUser(selectedUser?.user_org_id || "");
         }}
+        isLoading={isSubmitting}
+      />
+
+      <ConfirmationDialog
+        showDialog={showDeleteDialog}
+        setShowDialog={setShowDeleteDialog}
+        description={`Are you sure you want to remove ${selectedUser?.name} from organization?`}
+        action={() => removeUser(selectedUser?.user_org_id || "")}
         isLoading={isSubmitting}
       />
 

@@ -228,7 +228,11 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                   <p className="font-light">{user.email}</p>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{user.level}</Badge>
+                  <Badge
+                    variant={user?.level == "member" ? "outline" : "default"}
+                  >
+                    {user.level}
+                  </Badge>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {new Date(user.joined_at).toLocaleDateString()}

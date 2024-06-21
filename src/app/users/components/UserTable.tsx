@@ -75,9 +75,9 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
+        if (!data.success) {
           console.error(data);
-          toast.error(data.error);
+          toast.error(data.message);
         } else {
           console.log(data);
           toast.success("User promoted");
@@ -111,9 +111,9 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
+        if (!data.success) {
           console.error(data);
-          toast.error(data.error);
+          toast.error(data.message);
         } else {
           console.log(data);
           toast.success("User demoted");
@@ -150,9 +150,9 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
+        if (!data.success) {
           console.error(data);
-          toast.error(data.error);
+          toast.error(data.message);
         } else {
           console.log(data);
           toast.success("User removed");

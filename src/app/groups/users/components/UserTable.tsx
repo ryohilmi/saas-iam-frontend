@@ -73,9 +73,9 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
+        if (!data.success) {
           console.error(data);
-          toast.error(data.error);
+          toast.error(data.message);
         } else {
           console.log(data);
           toast.success("Group removed successfully");

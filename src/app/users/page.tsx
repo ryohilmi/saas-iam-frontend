@@ -33,7 +33,8 @@ import Link from "next/link";
 
 const Users = () => {
   const { userInfo } = useContext(AuthContext);
-  const { selectedOrganization } = useContext(OrganizationContext);
+  const { selectedOrganization, membershipLevel } =
+    useContext(OrganizationContext);
   const organizationId = selectedOrganization?.organizationId || "";
 
   const [showDialog, setShowDialog] = React.useState(false);
@@ -46,9 +47,8 @@ const Users = () => {
   const { users, mutate, isLoading } = useUsers({ organizationId });
   const filteredUsers = users?.filter(
     (user) =>
-      (user.name.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())) &&
-      user.user_id !== userInfo?.sub
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
   );
 
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
@@ -94,18 +94,20 @@ const Users = () => {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
           </div>
-          <div className="ml-auto flex whitespace-nowrap min-w-[110px] items-center gap-2">
-            <Button
-              size="sm"
-              className="h-8 gap-1"
-              onClick={() => setShowDialog(true)}
-            >
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Add User
-              </span>
-            </Button>
-          </div>
+          {membershipLevel !== "member" && (
+            <div className="ml-auto flex whitespace-nowrap min-w-[110px] items-center gap-2">
+              <Button
+                size="sm"
+                className="h-8 gap-1"
+                onClick={() => setShowDialog(true)}
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Add User
+                </span>
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="w-full flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
@@ -156,18 +158,20 @@ const Users = () => {
             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
           />
         </div>
-        <div className="ml-auto flex whitespace-nowrap min-w-[110px] items-center gap-2">
-          <Button
-            size="sm"
-            className="h-8 gap-1"
-            onClick={() => setShowDialog(true)}
-          >
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add User
-            </span>
-          </Button>
-        </div>
+        {membershipLevel !== "member" && (
+          <div className="ml-auto flex whitespace-nowrap min-w-[110px] items-center gap-2">
+            <Button
+              size="sm"
+              className="h-8 gap-1"
+              onClick={() => setShowDialog(true)}
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add User
+              </span>
+            </Button>
+          </div>
+        )}
       </div>
 
       <Card className="w-full relative">

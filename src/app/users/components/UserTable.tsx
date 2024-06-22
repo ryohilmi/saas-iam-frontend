@@ -177,9 +177,11 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
             <TableHead>Name</TableHead>
             <TableHead>Level</TableHead>
             <TableHead className="hidden md:table-cell">Joined at</TableHead>
-            <TableHead>
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {membershipLevel !== "member" && (
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -237,68 +239,72 @@ const UserTable: React.FC<Props> = ({ users, isLoading, setActionDialog }) => {
                 <TableCell className="hidden md:table-cell">
                   {new Date(user.joined_at).toLocaleDateString()}
                 </TableCell>
-                <TableCell>
-                  {user.level !== "owner" && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                          onClick={() => setActionDialog("assign_role", user)}
-                        >
-                          Assign Role
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => setActionDialog("assign_group", user)}
-                        >
-                          Assign Group
-                        </DropdownMenuItem>
+                {membershipLevel !== "member" && (
+                  <TableCell>
+                    {user.level !== "owner" && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => setActionDialog("assign_role", user)}
+                          >
+                            Assign Role
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              setActionDialog("assign_group", user)
+                            }
+                          >
+                            Assign Group
+                          </DropdownMenuItem>
 
-                        {membershipLevel === "owner" &&
-                          user.level == "member" && (
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setShowDialog(true);
-                                setDialogType("promote");
-                                setSelectedUser(user);
-                              }}
-                            >
-                              Make Manager
-                            </DropdownMenuItem>
-                          )}
-                        {membershipLevel === "owner" &&
-                          user.level == "manager" && (
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setShowDialog(true);
-                                setDialogType("demote");
-                                setSelectedUser(user);
-                              }}
-                            >
-                              Make Member
-                            </DropdownMenuItem>
-                          )}
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setShowDeleteDialog(true);
-                            setSelectedUser(user);
-                          }}
-                        >
-                          Remove
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </TableCell>
+                          {membershipLevel === "owner" &&
+                            user.level == "member" && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setDialogType("promote");
+                                  setSelectedUser(user);
+                                }}
+                              >
+                                Make Manager
+                              </DropdownMenuItem>
+                            )}
+                          {membershipLevel === "owner" &&
+                            user.level == "manager" && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setShowDialog(true);
+                                  setDialogType("demote");
+                                  setSelectedUser(user);
+                                }}
+                              >
+                                Make Member
+                              </DropdownMenuItem>
+                            )}
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setShowDeleteDialog(true);
+                              setSelectedUser(user);
+                            }}
+                          >
+                            Remove
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

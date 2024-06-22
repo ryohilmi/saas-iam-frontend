@@ -39,7 +39,8 @@ type Props = {
 
 const UserTable: React.FC<Props> = ({ users, isLoading }) => {
   const { mutate } = useSWRConfig();
-  const { selectedOrganization } = useContext(OrganizationContext);
+  const { selectedOrganization, membershipLevel } =
+    useContext(OrganizationContext);
   const organizationId = selectedOrganization?.organizationId || "";
 
   const [tenantId] = useQueryState("tenant_id", parseAsString);
@@ -100,9 +101,11 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
             </TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {membershipLevel !== "member" && (
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -146,33 +149,35 @@ const UserTable: React.FC<Props> = ({ users, isLoading }) => {
                   <p className="text-lg">{user.name}</p>
                 </TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  {user.level !== "owner" && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setShowDialog(true);
-                            setSelectedUser(user);
-                          }}
-                        >
-                          Remove Group
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </TableCell>
+                {membershipLevel !== "member" && (
+                  <TableCell>
+                    {user.level !== "owner" && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setShowDialog(true);
+                              setSelectedUser(user);
+                            }}
+                          >
+                            Remove Group
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

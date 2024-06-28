@@ -67,7 +67,14 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     if (storageToken && !token) {
       setToken(token);
 
-      const { sub, name, email, picture } = parseJwt(storageToken);
+      const { sub, name, email, picture, exp } = parseJwt(storageToken);
+
+      if (exp < Date.now() / 1000) {
+        localStorage.removeItem("token");
+        console.error("Token expired");
+        logout();
+      }
+
       setUserInfo({ sub, name, email, picture });
     } else {
       login();

@@ -129,16 +129,16 @@ export default function Home() {
         </div>
 
         <div className="grow grid gap-4 md:grid-cols-2 lg:grid-cols-7 ">
-          <Card className="col-span-4">
+          {/* <Card className="col-span-4">
             <CardHeader>
               <CardTitle>Login Activity</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
               <LoginActivity />
             </CardContent>
-          </Card>
+          </Card> */}
 
-          <Card className="col-span-3">
+          <Card className="col-span-7">
             <CardHeader>
               <CardTitle>Recently Joined</CardTitle>
             </CardHeader>
